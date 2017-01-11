@@ -224,7 +224,7 @@ run_socket(State = #gps_client{connection = Connection}) ->
     Connection:async_recv(0, infinity),
     State#gps_client{await_recv = true}.
 
-statfun(Stat, #gpsw_client{connection = Connection}) ->
+statfun(Stat, #gps_client{connection = Connection}) ->
     fun() ->
         case Connection:getstat([Stat]) of
             {ok, [{Stat, Val}]} -> {ok, Val};
