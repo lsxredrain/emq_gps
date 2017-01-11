@@ -114,12 +114,12 @@ handle_info({transaction, {timeout, Id}}, State) ->
     emq_gps_transaction:timeout(Id),
     noreply(State);
 
-handle_info({heartbeat, start, {Cx, Cy}}, State = #stomp_client{connection = Connection}) ->
+handle_info({heartbeat, start, {Cx, Cy}}, State = #gps_client{connection = Connection}) ->
     Self = self(),
     Incomming = {Cx, statfun(recv_oct, State), fun() -> Self ! {heartbeat, timeout} end},
     Outgoing  = {Cy, statfun(send_oct, State), fun() -> Connection:send(<<$\n>>) end},
     {ok, HbProc} = emq_gps_heartbeat:start_link(Incomming, Outgoing),
-    noreply(State#stomp_gps{heartbeat = HbProc});
+    noreply(State#gps_client{heartbeat = HbProc});
 
 handle_info({heartbeat, timeout}, State) ->
     stop({shutdown, heartbeat_timeout}, State);
@@ -128,7 +128,7 @@ handle_info({'EXIT', HbProc, Error}, State = #gps_client{heartbeat = HbProc}) ->
     stop(Error, State);
 
 handle_info(activate_sock, State) ->
-    noreply(run_socket(State#stomp_gps{conn_state = running}));
+    noreply(run_socket(State#gps_client{conn_state = running}));
 
 handle_info({inet_async, _Sock, _Ref, {ok, Bytes}}, State) ->
     ?LOG(debug, "RECV ~p", [Bytes], State),
