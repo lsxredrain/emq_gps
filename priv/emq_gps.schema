@@ -1,0 +1,66 @@
+{mapping, "gps.default_user.login", "emq_gps.default_user", [
+  {default, "guest"},
+  {datatype, string}
+]}.
+
+{mapping, "gps.default_user.passcode", "emq_gps.default_user", [
+  {default, "guest"},
+  {datatype, string}
+]}.
+
+{translation, "emq_gps.default_user", fun(Conf) ->
+  Login = cuttlefish:conf_get("gps.default_user.login", Conf),
+  Passcode = cuttlefish:conf_get("gps.default_user.passcode", Conf),
+  [{login, Login}, {passcode, Passcode}]
+end}.
+
+{mapping, "gps.allow_anonymous", "emq_gps.allow_anonymous", [
+  {default, true},
+  {datatype, {enum, [true, false]}}
+]}.
+
+{mapping, "gps.frame.max_headers", "emq_gps.frame", [
+  {default, 10},
+  {datatype, integer}
+]}.
+
+{mapping, "gps.frame.max_header_length", "emq_gps.frame", [
+  {default, 1024},
+  {datatype, integer}
+]}.
+
+{mapping, "gps.frame.max_body_length", "emq_gps.frame", [
+  {default, 8192},
+  {datatype, integer}
+]}.
+
+{translation, "emq_gps.frame", fun(Conf) ->
+  MaxHeaders = cuttlefish:conf_get("gps.frame.max_headers", Conf),
+  MaxHeaderLength = cuttlefish:conf_get("gps.frame.max_header_length", Conf),
+  MaxBodyLength = cuttlefish:conf_get("gps.frame.max_body_length", Conf),
+  [{max_headers, MaxHeaders}, {max_header_length, MaxHeaderLength}, {max_body_length, MaxBodyLength}]
+end}.
+
+
+{mapping, "gps.listener", "emq_gps.listener", [
+  {default, 17110},
+  {datatype, [integer, ip]}
+]}.
+
+{mapping, "gps.listener.acceptors", "emq_gps.listener", [
+  {default, 4},
+  {datatype, integer}
+]}.
+
+{mapping, "gps.listener.max_clients", "emq_gps.listener", [
+  {default, 512},
+  {datatype, integer}
+]}.
+
+{translation, "emq_gps.listener", fun(Conf) ->
+  Port = cuttlefish:conf_get("gps.listener", Conf),
+  Acceptors = cuttlefish:conf_get("gps.listener.acceptors", Conf),
+  MaxClients = cuttlefish:conf_get("gps.listener.max_clients", Conf),
+  {Port, [{acceptors, Acceptors}, {max_clients, MaxClients}]}
+end}.
+
