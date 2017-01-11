@@ -9,7 +9,7 @@ rel/example_project
 .concrete/DEV_MODE
 .rebar
 .erlang.mk/
-emq_stomp.d
+emq_gps.d
 ct.coverdata
 logs/
 test/ct.cover.spec
